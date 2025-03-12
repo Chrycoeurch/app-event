@@ -1,0 +1,151 @@
+<div class="main-container">
+    <div class="form-side">
+        <div class="progress-container">
+            <div class="progress-info">
+                <span class="questions-count">Questions répondues: <span id="questionsAnswered">0</span>/7</span>
+                <span class="progress-percentage" id="progressPercentage">0%</span>
+            </div>
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <h1>Choisissez votre application événementielle idéale</h1>
+        
+        <form id="eventForm">
+            <div class="form-group">
+                <label><strong>Quel type d'événement organisez-vous ?</strong></label>
+                <div class="radio-cards">
+                    <label class="radio-card">
+                        <input type="radio" name="eventType" value="conference" required>
+                        <span class="radio-card-content">Conférence</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="eventType" value="mariage">
+                        <span class="radio-card-content">Mariage</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="eventType" value="festival">
+                        <span class="radio-card-content">Festival</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="eventType" value="seminaire">
+                        <span class="radio-card-content">Séminaire</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="eventType" value="autre">
+                        <span class="radio-card-content">Autre</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><strong>Combien de participants attendez-vous ?</strong></label>
+                <input type="range" name="participants" min="0" max="1000" step="50" value="0" class="slider" id="participantsRange">
+                <span id="participantsValue">0</span>
+            </div>
+
+            <div class="form-group">
+                <label><strong>L'événement est-il en ligne, en présentiel ou hybride ?</strong></label>
+                <div class="radio-cards">
+                    <label class="radio-card">
+                        <input type="radio" name="eventFormat" value="online" required>
+                        <span class="radio-card-content">En ligne</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="eventFormat" value="presentiel">
+                        <span class="radio-card-content">Présentiel</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="eventFormat" value="hybride">
+                        <span class="radio-card-content">Hybride</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><strong>Avez-vous besoin d'outils de communication entre participants ?</strong></label>
+                <div class="radio-cards">
+                    <label class="radio-card">
+                        <input type="radio" name="communication" value="oui" required>
+                        <span class="radio-card-content">Oui</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="communication" value="non">
+                        <span class="radio-card-content">Non</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><strong>Quel est votre budget pour l'application ?</strong></label>
+                <div class="radio-cards">
+                    <label class="radio-card">
+                        <input type="radio" name="budget" value="gratuit" required>
+                        <span class="radio-card-content">Gratuit</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="budget" value="moins100">
+                        <span class="radio-card-content">moins de 100€</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="budget" value="100-500">
+                        <span class="radio-card-content">entre 100 à 500€</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="budget" value="plus500">
+                        <span class="radio-card-content">500€ et plus</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><strong>Avez-vous besoin de gérer les paiements en ligne ?</strong></label>
+                <div class="radio-cards">
+                    <label class="radio-card">
+                        <input type="radio" name="payments" value="oui" required>
+                        <span class="radio-card-content">Oui</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="payments" value="non">
+                        <span class="radio-card-content">Non</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="payments" value="peut-etre">
+                        <span class="radio-card-content">Peut-être</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><strong>Préférez-vous une application avec un paiement unique ou un abonnement ?</strong></label>
+                <div class="radio-cards">
+                    <label class="radio-card">
+                        <input type="radio" name="paymentType" value="unique" required>
+                        <span class="radio-card-content">Paiement unique</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="paymentType" value="mensuel">
+                        <span class="radio-card-content">Abonnement mensuel</span>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="paymentType" value="annuel">
+                        <span class="radio-card-content">Abonnement annuel</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+            <button type="submit" class="submit-btn">Voir mes résultats</button>
+        </form>
+    </div>
+    <div class="info-side">
+        <div class="info-content">
+            <h2>Trouvez votre application événementielle idéale gratuitement</h2>
+            <p>Notre simulateur intelligent analyse vos besoins et préférences pour vous recommander les applications événementielles les mieux adaptées à votre profil.</p>
+            <ul class="features-list">
+                <li>Recommandations personnalisées basées sur vos réponses</li>
+                <li>Comparaison détaillée des caractéristiques</li>
+                <li>Sélection des meilleurs rapports qualité-prix</li>
+            </ul>
+        </div>
+    </div>
+</div>
