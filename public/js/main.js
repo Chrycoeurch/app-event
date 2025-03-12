@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const participantsValue = document.getElementById('participantsValue');
     const questionsAnswered = document.getElementById('questionsAnswered');
     const progressPercentage = document.getElementById('progressPercentage');
+    const container = document.querySelector('.container');
 
     // Set initial value to 0
     if (participantsValue) {
@@ -20,17 +21,84 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateProgress() {
-        const radioChecked = form.querySelectorAll('input[type="radio"]:checked').length;
+        const checkboxGroups = ['eventType', 'eventFormat', 'communication', 'payments'].map(name => {
+            return form.querySelector(`input[name="${name}"]:checked`) !== null;
+        });
+        
+        const radioGroups = ['budget', 'paymentType'].map(name => {
+            return form.querySelector(`input[name="${name}"]:checked`) !== null;
+        });
+        
         const hasParticipants = parseInt(participantsRange.value) > 0;
-        const totalFields = radioChecked + (hasParticipants ? 1 : 0);
-        const progress = Math.min((totalFields / 7) * 100, 100); // Limit to 100%
+        
+        const answeredQuestions = [
+            ...checkboxGroups,
+            ...radioGroups,
+            hasParticipants
+        ].filter(Boolean).length;
+        
+        const progress = Math.min((answeredQuestions / 7) * 100, 100);
         progressBar.style.width = `${progress}%`;
-        questionsAnswered.textContent = totalFields;
+        questionsAnswered.textContent = answeredQuestions;
         progressPercentage.textContent = `${Math.round(progress)}%`;
     }
 
+    function showResults() {
+        const mainContainer = document.querySelector('.main-container');
+        mainContainer.style.opacity = '0';
+        mainContainer.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            mainContainer.style.display = 'none';
+            
+            const resultsContainer = document.createElement('div');
+            resultsContainer.className = 'recommendations';
+            resultsContainer.style.opacity = '0';
+            resultsContainer.style.transform = 'translateY(20px)';
+            
+            resultsContainer.innerHTML = `
+                <h2>Merci d'avoir complété le questionnaire !</h2>
+                <p>Voici les applications événementielles qui correspondent le mieux à vos besoins :</p>
+                
+                <div class="app-cards">
+                    <!-- Your existing app cards here -->
+                </div>
+
+                <button class="restart-btn">Recommencer le questionnaire</button>
+            `;
+            
+            container.appendChild(resultsContainer);
+            
+            // Animate results in
+            setTimeout(() => {
+                resultsContainer.style.opacity = '1';
+                resultsContainer.style.transform = 'translateY(0)';
+            }, 50);
+
+            // Add event listener for restart button
+            const restartBtn = resultsContainer.querySelector('.restart-btn');
+            restartBtn.addEventListener('click', function() {
+                resultsContainer.style.opacity = '0';
+                resultsContainer.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    resultsContainer.remove();
+                    mainContainer.style.display = 'flex';
+                    form.reset();
+                    updateProgress();
+                    
+                    // Animate form back in
+                    setTimeout(() => {
+                        mainContainer.style.opacity = '1';
+                        mainContainer.style.transform = 'translateY(0)';
+                    }, 50);
+                }, 300);
+            });
+        }, 300);
+    }
+
     if (form) {
-        form.querySelectorAll('input[type="radio"]').forEach(element => {
+        form.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(element => {
             element.addEventListener('change', updateProgress);
         });
 
@@ -39,39 +107,35 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const formData = new FormData(form);
             let isValid = true;
-            let emptyFields = [];
 
-            formData.forEach((value, key) => {
-                if (!value) {
+            // Check if at least one checkbox is checked for each checkbox group
+            const checkboxGroups = ['eventType', 'eventFormat', 'communication', 'payments'];
+            checkboxGroups.forEach(groupName => {
+                if (!form.querySelector(`input[name="${groupName}"]:checked`)) {
                     isValid = false;
-                    emptyFields.push(key);
                 }
             });
 
-            if (!isValid || parseInt(participantsRange.value) === 0) {
+            // Check radio buttons
+            const radioGroups = ['budget', 'paymentType'];
+            radioGroups.forEach(groupName => {
+                if (!form.querySelector(`input[name="${groupName}"]:checked`)) {
+                    isValid = false;
+                }
+            });
+
+            // Check participants
+            if (parseInt(participantsRange.value) === 0) {
+                isValid = false;
+            }
+
+            if (!isValid) {
                 errorMessage.style.display = 'block';
                 errorMessage.textContent = 'Veuillez répondre à toutes les questions.';
                 return;
             }
 
-            fetch('/submit', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(Object.fromEntries(formData))
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.href = '/results';
-                }
-            })
-            .catch(error => {
-                console.error('Erreur:', error);
-                errorMessage.style.display = 'block';
-                errorMessage.textContent = 'Une erreur est survenue. Veuillez réessayer.';
-            });
+            showResults();
         });
     }
 });
